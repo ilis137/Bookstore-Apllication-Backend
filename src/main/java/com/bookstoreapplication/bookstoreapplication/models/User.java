@@ -28,7 +28,7 @@ public class User {
   private int userId;
   @NotNull(message = "UserName should not be null")
   @Size(max = 20)
-  private String name;
+  private String username;
 
   @NotNull(message = "mobile no shouldn't be null")
   @Pattern(regexp = "^\\d{10}$", message = "Invalid mobileNo entered")

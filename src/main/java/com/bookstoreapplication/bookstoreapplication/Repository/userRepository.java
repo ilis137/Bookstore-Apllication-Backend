@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.bookstoreapplication.bookstoreapplication.models.User;
 
 @Repository
-public interface userRepository extends JpaRepository<User,Integer>{
-  Optional<User> findByusername(String username);
+public interface UserRepository extends JpaRepository<User,Integer>{
+  Optional<User> findByUsername(String username);
   Boolean existsByUsername(String username);
 	Boolean existsByEmail(String email);
 }

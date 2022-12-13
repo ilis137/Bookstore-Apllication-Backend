@@ -9,6 +9,6 @@ import com.bookstoreapplication.bookstoreapplication.models.Role;
 import com.bookstoreapplication.bookstoreapplication.models.RoleEnum;
 
 @Repository
-public interface roleRepository extends JpaRepository<Role,Integer>{
+public interface RoleRepository extends JpaRepository<Role,Integer>{
   Optional<Role> findByName(RoleEnum name);
 }
