@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "UserData", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"),
-    @UniqueConstraint(columnNames = "email")
+    @UniqueConstraint(columnNames = "emailId")
 })
 @Data
 @AllArgsConstructor(staticName = "Build")
@@ -55,5 +55,5 @@ public class User {
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<RoleEnum> roles = new HashSet<>();
+  private Set<Role> roles = new HashSet<>();
 }
