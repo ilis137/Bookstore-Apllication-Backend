@@ -24,18 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookstoreapplication.bookstoreapplication.DTO.LoginDTO;
 import com.bookstoreapplication.bookstoreapplication.DTO.ResponseDTO;
 import com.bookstoreapplication.bookstoreapplication.DTO.UserRegistrationDTO;
+import com.bookstoreapplication.bookstoreapplication.Exception.UserNotFoundException;
+import com.bookstoreapplication.bookstoreapplication.Exception.UsernamePasswordInvalidException;
 import com.bookstoreapplication.bookstoreapplication.Repository.RoleRepository;
 import com.bookstoreapplication.bookstoreapplication.Repository.UserRepository;
 import com.bookstoreapplication.bookstoreapplication.Services.IUserService;
 import com.bookstoreapplication.bookstoreapplication.Util.JWTUtil;
-
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
   @Autowired
-	AuthenticationManager authenticationManager;
+  AuthenticationManager authenticationManager;
 
   @Autowired
   private IUserService userService;
@@ -44,21 +45,36 @@ public class AuthController {
   JWTUtil jwtUtils;
 
   @PostMapping("/register")
-  public ResponseEntity<ResponseDTO> registerUser(@Valid @RequestBody UserRegistrationDTO userRegDTO){
+  public ResponseEntity<ResponseDTO> registerUser(@Valid @RequestBody UserRegistrationDTO userRegDTO) {
+
+    if (userService.existsByEmail(userRegDTO.getEmailId())) {
+      ResponseDTO responseDTO = ResponseDTO.Build("Error: Email is already in use!", false);
+
+      return ResponseEntity
+          .badRequest()
+          .body(responseDTO);
+    }
     ResponseDTO responseDTO = ResponseDTO.Build("User registration successful", userService.addUser(userRegDTO));
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ResponseDTO> loginUser(@Valid @RequestBody LoginDTO loginDTO){
-    Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+  public ResponseEntity<ResponseDTO> loginUser(@Valid @RequestBody LoginDTO loginDTO)
+      throws UsernamePasswordInvalidException, UserNotFoundException {
+        Authentication authentication;
+    try {
+       authentication = authenticationManager
+          .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+
+    } catch (Exception e) {
+      throw new UsernamePasswordInvalidException("Invalid username or password");
+    }
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(authentication);
 
-    
-    ResponseDTO responseDTO = ResponseDTO.Build(jwt,userService.getUserIdByUserName(loginDTO.getUserName()));
+    ResponseDTO responseDTO = ResponseDTO.Build(jwt, userService.getUserIdByUserName(loginDTO.getUserName()));
 
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }

@@ -10,16 +10,24 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "UserData", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"),
-    @UniqueConstraint(columnNames = "emailId")
+    @UniqueConstraint(columnNames = "emailId"),
+    @UniqueConstraint(columnNames = "username")
 })
-@Data
+@Getter
+@Setter
 @AllArgsConstructor(staticName = "Build")
 @NoArgsConstructor
 public class User {
@@ -40,6 +48,7 @@ public class User {
 
   @NotBlank
   @Size(max = 120)
+  @JsonProperty(access = Access.WRITE_ONLY)
   private String password;
 
   @NotNull
@@ -53,7 +62,16 @@ public class User {
   @NotNull
   private String address;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private Set<CartItem> cartItems = new HashSet<>();
+
+  
+  @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "seller")
+  @JsonIgnore
+  private Set<Book> BookStock=new HashSet<>();
 }
