@@ -23,11 +23,8 @@ import lombok.NoArgsConstructor;
 public class CartItem {
   @Id
   private int cartItemId;
-  @OneToOne
+  @ManyToOne(fetch = FetchType.EAGER )
   @JoinColumn(name="book_id")
   private Book book;
   private int quantity;
-  
-  
-
 }
