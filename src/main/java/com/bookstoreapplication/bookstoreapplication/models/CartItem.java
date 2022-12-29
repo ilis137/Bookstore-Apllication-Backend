@@ -3,6 +3,8 @@ package com.bookstoreapplication.bookstoreapplication.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,10 +23,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "Build")
 @NoArgsConstructor
 public class CartItem {
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Id
   private int cartItemId;
   @ManyToOne(fetch = FetchType.EAGER )
   @JoinColumn(name="book_id")
   private Book book;
+  
   private int quantity;
+
+  public CartItem(Book book, int quantity) {
+    this.book = book;
+    this.quantity = quantity;
+  }
 }

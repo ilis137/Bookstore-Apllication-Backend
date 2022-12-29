@@ -9,16 +9,24 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="order")
+@Table(name = "orderitem")
 @Getter
 @Setter
 @AllArgsConstructor(staticName = "Build")
 @NoArgsConstructor
 public class OrderItem {
-  @Id 
+
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Id
   private int orderItemId;
-  @ManyToOne(fetch = FetchType.EAGER )
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id")
   private Book book;
   private int quantity;
+
+  public OrderItem(Book book, int quantity) {
+    this.book = book;
+    this.quantity = quantity;
+  }
+
 }

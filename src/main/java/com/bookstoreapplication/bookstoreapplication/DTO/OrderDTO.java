@@ -1,7 +1,9 @@
 package com.bookstoreapplication.bookstoreapplication.DTO;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.bookstoreapplication.bookstoreapplication.models.OrderItem;
 
@@ -21,5 +23,5 @@ public class OrderDTO {
   private String state;
   private long totalPrice;
  
-  private List<OrderItem> orderItems = new ArrayList<>();
+  private Set<OrderItemDTO> orderItems = new HashSet<>();
 }

@@ -37,8 +37,7 @@ public class BookController {
   @PutMapping("/update/{bookId}")
   @PreAuthorize("hasRole('ROLE_SELLER')")
   public ResponseEntity<ResponseDTO> updateBook(@RequestBody @Valid BookDTO bookDTO,@PathVariable int bookId) throws BookNotFoundException,MethodArgumentNotValidException{
-    Book book=bookService.updateBookById(bookId,bookDTO);
-    ResponseDTO responseDTO = ResponseDTO.Build("Added Book to store", book);
+    ResponseDTO responseDTO = ResponseDTO.Build("Added Book to store", bookService.updateBookById(bookId,bookDTO));
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     
   }

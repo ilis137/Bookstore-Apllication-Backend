@@ -11,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -70,8 +71,8 @@ public class User {
   @JoinColumn(name = "user_id")
   private Set<CartItem> cartItems = new HashSet<>();
 
-  
+
   @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "seller")
   @JsonIgnore
-  private Set<Book> BookStock=new HashSet<>();
+  public Set<Book> BookStock=new HashSet<>();
 }

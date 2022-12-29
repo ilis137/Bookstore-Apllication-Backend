@@ -1,26 +1,35 @@
 package com.bookstoreapplication.bookstoreapplication.models;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.*;
 
 import javax.persistence.*;
 
 import lombok.*;
 
 @Entity
-@Table(name="order")
+@Table(name = "orders")
 @Getter
 @Setter
 @AllArgsConstructor(staticName = "Build")
 @NoArgsConstructor
 public class Order {
+ 
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Id
   private int orderId;
-  @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-  @JoinColumn(name="user_id")
+  @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+  @JoinColumn(name = "user_id")
   private User user;
   private long totalPrice;
-  @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "order_id")
-  private List<OrderItem> orderItems = new ArrayList<>();
+  private Set<OrderItem> orderItems = new HashSet<>();
+  public Order(User user, long totalPrice, Set<OrderItem> orderItems) {
+    this.user = user;
+    this.totalPrice = totalPrice;
+    this.orderItems = orderItems;
+  }
+
 }
